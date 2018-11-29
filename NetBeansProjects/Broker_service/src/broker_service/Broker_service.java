@@ -32,25 +32,25 @@ public class Broker_service {
         XMLGregorianCalendar xmlcalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
         
         
-        shareInformation.Broker context = new shareInformation.Broker();
-        
-        context.setCompanyName("Joselson Inc.");
-        context.setCompanySymbol("Joselson.png");
-        context.setAvailableShares(200);
-        context.setCurrency("GBP");
-        context.setValue(400);
-        //context.setLastUpdate(xmlcalendar);
-        
-        try {            
-            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(context.getClass().getPackage().getName());
-            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(context, System.out);
-        } catch (javax.xml.bind.JAXBException ex) {
-            // XXXTODO Handle exception
-            java.util.logging.Logger.getLogger("global").log(java.util.logging.Level.SEVERE, null, ex); //NOI18N
-        }
+//        shareInformation.Broker context = new shareInformation.Broker();
+//        
+//        context.setCompanyName("Joselson Inc.");
+//        context.setCompanySymbol("Joselson.png");
+//        context.setAvailableShares(200);
+//        context.setCurrency("GBP");
+//        context.setValue(400);
+//        context.setLastUpdate(xmlcalendar);
+//        
+//        try {            
+//            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(context.getClass().getPackage().getName());
+//            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+//            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+//            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//            marshaller.marshal(context, System.out);
+//        } catch (javax.xml.bind.JAXBException ex) {
+//            // XXXTODO Handle exception
+//            java.util.logging.Logger.getLogger("global").log(java.util.logging.Level.SEVERE, null, ex); //NOI18N
+//        }
         
     }
     

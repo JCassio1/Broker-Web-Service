@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<ns1:Shares_Today
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:ns1='http://xml.netbeans.org/schema/Broker'
+    xsi:schemaLocation='http://xml.netbeans.org/schema/Broker file:/Users/JCassio/NetBeansProjects/Broker_service/src/broker_service/Broker.xsd'>
+    <ns1:broker_collection>
+        <ns1:companyName>Joselson Inc.</ns1:companyName>
+        <ns1:companySymbol>gcgcgccg</ns1:companySymbol>
+        <ns1:availableShares>200</ns1:availableShares>
+        <ns1:share_price>
+            <ns1:currency>GBP</ns1:currency>
+            <ns1:value>450</ns1:value>
+            <ns1:last-update>2018-11-24</ns1:last-update>
+        </ns1:share_price>
+    </ns1:broker_collection>
+
+</ns1:Shares_Today>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="file:/Users/JCassio/NetBeansProjects/Broker_WebService/src/broker_webservice/Broker_Schema.xsd" uri="xml-resources/jaxb/BrokerRequest/Broker_Schema.xsd"/>
+</catalog>

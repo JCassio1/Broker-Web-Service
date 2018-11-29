@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<ns1:Shares_Today
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:ns1='http://xml.netbeans.org/schema/Broker_Schema'
+    xsi:schemaLocation='http://xml.netbeans.org/schema/Broker_Schema file:/Users/JCassio/NetBeansProjects/Broker_WebService/src/broker_webservice/Broker_Schema.xsd'>
+    <ns1:broker_collection>
+        <ns1:companyName></ns1:companyName>
+        <ns1:companySymbol></ns1:companySymbol>
+        <ns1:availableShares></ns1:availableShares>
+        <ns1:share_price>
+            <ns1:currency></ns1:currency>
+            <ns1:value></ns1:value>
+            <ns1:last-update></ns1:last-update>
+        </ns1:share_price>
+    </ns1:broker_collection>
+
+
+</ns1:Shares_Today>

@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <schemas xmlns='http://xml.netbeans.org/schema/JAXBWizConfig' destdir='build/generated-sources/jaxb' projectName='BrokerWebService' version='1.0'>
-	<schema type='-xmlschema' package='AllShares' name='SharesSchema'>
+	<schema type='-xmlschema' package='AllShares' name='shareSchema'>
 		<xjc-options>
 		</xjc-options>
 		<schema-sources>
-			<schema-source location='src/conf/xml-resources/jaxb/SharesSchema/Broker_Schema.xsd' origLocation='../Broker_WebService/src/broker_webservice/Broker_Schema.xsd'/>
+			<schema-source location='conf/xml-resources/jaxb/shareSchema/Broker.xsd' origLocation='../Broker_service/src/broker_service/Broker.xsd'/>
 		</schema-sources>
 		<bindings>
 		</bindings>

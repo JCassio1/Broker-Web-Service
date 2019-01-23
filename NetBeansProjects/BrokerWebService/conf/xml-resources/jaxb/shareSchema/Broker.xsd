@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/Broker"
+    xmlns:tns="http://xml.netbeans.org/schema/Broker"
+    elementFormDefault="qualified">
+    
+    
+    <!-- definition of complex elements -->
+    
+        <xsd:complexType name="Broker">
+            <xsd:sequence>
+                <xsd:element name="companyName" type="tns:StringLimit"/>
+                <xsd:element name="companySymbol" type="tns:StringLimit"/>
+                <xsd:element name="availableShares" type="tns:IntegerLimit"/>
+                <xsd:element name="share_price" type="tns:share_price"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    
+    
+    <xsd:complexType name="share_price">
+        <xsd:sequence>
+            <xsd:element name="currency" type="tns:CurrencyLimit"/>
+            <xsd:element name="value" type="tns:IntegerLimit"/>
+            <xsd:element name="last-update" type="xsd:date"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    
+    <!-- definition of list of shares -->
+    
+    <xsd:element name="Shares_Today">
+        <xsd:complexType>
+            <xsd:sequence >
+                <xsd:element name="broker_collection" type="tns:Broker" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    
+    
+    <!-- definition of restrictions -->
+    
+    <xsd:simpleType name="StringLimit">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="15"></xsd:maxLength>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    
+    <xsd:simpleType name="IntegerLimit">
+        <xsd:restriction base="xsd:int">
+            <xsd:pattern value="[0-9]*"></xsd:pattern>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    
+    <xsd:simpleType name="CurrencyLimit">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="3"></xsd:maxLength>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

@@ -36,8 +36,8 @@ public class BrokerWS {
      */
     
     
-    //Unmarshaller
-    public static List<Broker> UnmarshallToday() throws FileNotFoundException{
+    //Method to unmarshall file
+    public List<Broker> UnmarshallToday() throws FileNotFoundException{
         
         List<Broker> activeShares = null;
         
@@ -47,24 +47,28 @@ public class BrokerWS {
             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(thePrices.getClass().getPackage().getName());
             javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
             thePrices = (SharesToday) unmarshaller.unmarshal(new java.io.File("/Users/JCassio/NetBeansProjects/Broker_WebService/shares_today.txt")); //NOI18N
-            activeShares = thePrices.getBrokerCollection();
-            
+            activeShares = thePrices.getBrokerCollection(); 
         } catch (javax.xml.bind.JAXBException ex) {
             // XXXTODO Handle exception
             java.util.logging.Logger.getLogger("global").log(java.util.logging.Level.SEVERE, null, ex); //NOI18N
         }
         
-        
         return activeShares;
     }
     
+    
+    
+    
     //Method to return user queries
-    public static String retrieveQueries(String firstQuery, String SecondQuery) throws FileNotFoundException{
-       
+    public String retrieveQueries(String firstQuery, String SecondQuery) throws FileNotFoundException{
+      
         //Calling unmarshall method and object declaration
-        List<Broker> shares_list = UnmarshallToday();
+        BrokerWS runningUnmarshal = new BrokerWS();
+        List<Broker> shares_list = runningUnmarshal.UnmarshallToday();
+        
+        
         Broker shareFilter = new Broker();
-        SharePrice shareDetails = new SharePrice();
+        //SharePrice shareDetails = new SharePrice();
         
         String GoldQuery ="";
         
@@ -119,7 +123,6 @@ public class BrokerWS {
         }
         
         else if (firstQuery.equals("currency")){
-            
             try {    
                 Iterator itr = shares_list.iterator();
                 while(itr.hasNext()) {
@@ -194,6 +197,9 @@ public class BrokerWS {
     @WebMethod(operationName = "userInput")
     public String userInput(@WebParam(name = "firstQuery") String firstCommand, @WebParam(name = "secondQuery") String secondCommand) throws FileNotFoundException {
         
+        //Declaring object
+        BrokerWS searcher = new BrokerWS();
+        
         
         //Value returned to user
         String UserResult = "";
@@ -201,40 +207,29 @@ public class BrokerWS {
         
         //Obtaining Query from user
         if (firstCommand.equals("list") && secondCommand.equals("shares")){
-                    
-                    UserResult = retrieveQueries(firstCommand,secondCommand);
-
+                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
         }
         
         else if (firstCommand.equals("show")){
-            
-            UserResult = retrieveQueries(firstCommand,secondCommand);
-            
+                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
         }
         
         else if (firstCommand.equals("currency")){
-            
-            UserResult = retrieveQueries(firstCommand,secondCommand);
-            
+                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
         }
         
         else if (firstCommand.equals("compare")){
-            UserResult = retrieveQueries(firstCommand,secondCommand);
+                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
         }
         
         else if (firstCommand.equals("codes") && secondCommand.equals("currency")){
-            
-            
-            
+                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
         }
         
         else{
             UserResult = "Command not recognized!";
         }
-        
+
         return UserResult;
-
     }
-
-
 }

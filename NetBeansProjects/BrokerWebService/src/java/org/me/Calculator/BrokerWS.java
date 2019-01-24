@@ -6,7 +6,6 @@
 package org.me.Calculator;
 
 import AllShares.*;
-import docwebservices.CurrencyConversionWSService;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,9 +27,6 @@ import javax.xml.ws.WebServiceRef;
 @Stateless()
 public class BrokerWS {
 
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CurrencyConvertor/CurrencyConversionWSService.wsdl")
-    private CurrencyConversionWSService service;
-
     /**
      * This is a sample web service operation
      */
@@ -39,15 +35,7 @@ public class BrokerWS {
      * Web service operation
      */
     
-    List<String> listOfCodes = null;
     
-    //Method for currencies code
-    private java.util.List<java.lang.String> getCurrencyCodes() {
-        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
-        // If the calling of port operations may lead to race condition some synchronization is required.
-        docwebservices.CurrencyConversionWS port = service.getCurrencyConversionWSPort();
-        return port.getCurrencyCodes();
-    }
     
     
     //Method to unmarshall file
@@ -225,6 +213,9 @@ public class BrokerWS {
         
         String[] splitQuery = query.split(" ");
         
+        //You can delete that
+        //int valueInInt;
+        
         
         //Value returned to user
         String UserResult = "";
@@ -253,8 +244,15 @@ public class BrokerWS {
         }
         
         else if (query.contains("all") && query.contains("currencies")){
-                    searcher.listOfCodes = searcher.getCurrencyCodes(); //searcher.retrieveQueries(query,splitQuery[1]);
-                    UserResult = String.join(",", searcher.listOfCodes);         
+//                    searcher.listOfCodes = searcher.getCurrencyCodes(); //searcher.retrieveQueries(query,splitQuery[1]);
+//                    UserResult = searcher.listOfCodes.toString();       
+        }
+        
+        else if (query.contains("rate")){
+            
+//            Double theRate = new Double(searcher.getConversionRate(splitQuery[1], splitQuery[2]));
+//            valueInInt = theRate.intValue();
+//            UserResult = Integer.toString(valueInInt);
         }
         
         else{
@@ -263,6 +261,4 @@ public class BrokerWS {
 
         return UserResult;
     }
-
-
 }

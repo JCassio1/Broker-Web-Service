@@ -6,6 +6,7 @@
 package org.me.Calculator;
 
 import AllShares.*;
+import docwebservices.CurrencyConversionWSService;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,9 @@ import javax.xml.ws.WebServiceRef;
 @WebService(serviceName = "BrokerWS")
 @Stateless()
 public class BrokerWS {
+
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CurrencyConvertor/CurrencyConversionWSService.wsdl")
+    private CurrencyConversionWSService service;
 
     /**
      * This is a sample web service operation
@@ -56,9 +60,7 @@ public class BrokerWS {
         }
         
         return activeShares;
-    }
-    
-    
+    }   
     
     
     //Method to return user queries
@@ -244,15 +246,12 @@ public class BrokerWS {
         }
         
         else if (query.contains("all") && query.contains("currencies")){
-//                    searcher.listOfCodes = searcher.getCurrencyCodes(); //searcher.retrieveQueries(query,splitQuery[1]);
-//                    UserResult = searcher.listOfCodes.toString();       
+                    UserResult = String.join(",", getCurrencyCodes());
         }
         
         else if (query.contains("rate")){
-            
-//            Double theRate = new Double(searcher.getConversionRate(splitQuery[1], splitQuery[2]));
-//            valueInInt = theRate.intValue();
-//            UserResult = Integer.toString(valueInInt);
+
+            UserResult = "Exchange rate is " + String.valueOf(getConversionRate(splitQuery[1].toUpperCase(), splitQuery[2].toUpperCase()));
         }
         
         else{
@@ -261,4 +260,20 @@ public class BrokerWS {
 
         return UserResult;
     }
+
+    private double getConversionRate(java.lang.String arg0, java.lang.String arg1) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        docwebservices.CurrencyConversionWS port = service.getCurrencyConversionWSPort();
+        return port.getConversionRate(arg0, arg1);
+    }
+
+    private java.util.List<java.lang.String> getCurrencyCodes() {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        docwebservices.CurrencyConversionWS port = service.getCurrencyConversionWSPort();
+        return port.getCurrencyCodes();
+    }
+
+
 }

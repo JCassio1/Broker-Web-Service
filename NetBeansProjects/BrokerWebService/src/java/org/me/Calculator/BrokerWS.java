@@ -6,6 +6,7 @@
 package org.me.Calculator;
 
 import AllShares.*;
+import docwebservices.CurrencyConversionWSService;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,9 @@ import javax.xml.ws.WebServiceRef;
 @Stateless()
 public class BrokerWS {
 
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CurrencyConvertor/CurrencyConversionWSService.wsdl")
+    private CurrencyConversionWSService service;
+
     /**
      * This is a sample web service operation
      */
@@ -34,6 +38,16 @@ public class BrokerWS {
     /**
      * Web service operation
      */
+    
+    List<String> listOfCodes = null;
+    
+    //Method for currencies code
+    private java.util.List<java.lang.String> getCurrencyCodes() {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        docwebservices.CurrencyConversionWS port = service.getCurrencyConversionWSPort();
+        return port.getCurrencyCodes();
+    }
     
     
     //Method to unmarshall file
@@ -185,8 +199,14 @@ public class BrokerWS {
                 }
         }
         
+        else if (firstQuery.equals("all") && SecondQuery.equals("currencies")){
+            
+            
+            
+        }
+        
         else{
-            GoldQuery = "Query not recognized!";
+            GoldQuery = "Query not found or recognized!";
         }
 
         return GoldQuery;
@@ -194,11 +214,16 @@ public class BrokerWS {
           
 
     
+    //Web Method
     @WebMethod(operationName = "userInput")
-    public String userInput(@WebParam(name = "firstQuery") String firstCommand, @WebParam(name = "secondQuery") String secondCommand) throws FileNotFoundException {
+    public String userInput(@WebParam(name = "firstQuery") String query) throws FileNotFoundException {
         
-        //Declaring object
+        //Declaring object (non-static context)
         BrokerWS searcher = new BrokerWS();
+        
+        query = query.toLowerCase();
+        
+        String[] splitQuery = query.split(" ");
         
         
         //Value returned to user
@@ -206,30 +231,38 @@ public class BrokerWS {
         
         
         //Obtaining Query from user
-        if (firstCommand.equals("list") && secondCommand.equals("shares")){
-                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
+        if (query.contains("list") && query.contains("shares")){
+                    UserResult = searcher.retrieveQueries("list","shares");
         }
         
-        else if (firstCommand.equals("show")){
-                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
+        else if (query.contains("show")){
+                    UserResult = searcher.retrieveQueries("show",splitQuery[1]);
         }
         
-        else if (firstCommand.equals("currency")){
-                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
+        
+        else if (query.contains("currency")){
+                    UserResult = searcher.retrieveQueries("currency",splitQuery[1].toUpperCase());
         }
         
-        else if (firstCommand.equals("compare")){
-                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
+        else if (query.contains("compare") && query.contains("highest")){
+                    UserResult = searcher.retrieveQueries("compare","highest");
         }
         
-        else if (firstCommand.equals("codes") && secondCommand.equals("currency")){
-                    UserResult = searcher.retrieveQueries(firstCommand,secondCommand);
+        else if (query.contains("compare") && query.contains("lowest")){
+                    UserResult = searcher.retrieveQueries("compare","lowest");                 
+        }
+        
+        else if (query.contains("all") && query.contains("currencies")){
+                    searcher.listOfCodes = searcher.getCurrencyCodes(); //searcher.retrieveQueries(query,splitQuery[1]);
+                    UserResult = String.join(",", searcher.listOfCodes);         
         }
         
         else{
-            UserResult = "Command not recognized!";
+                    UserResult = "Command not recognized!";
         }
 
         return UserResult;
     }
+
+
 }

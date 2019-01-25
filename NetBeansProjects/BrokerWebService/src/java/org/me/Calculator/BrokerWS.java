@@ -40,8 +40,6 @@ public class BrokerWS {
      */
     
     
-    
-    
     //Method to unmarshall file
     public List<Broker> UnmarshallToday() throws FileNotFoundException{
         
@@ -58,7 +56,6 @@ public class BrokerWS {
             // XXXTODO Handle exception
             java.util.logging.Logger.getLogger("global").log(java.util.logging.Level.SEVERE, null, ex); //NOI18N
         }
-        
         return activeShares;
     }   
     
@@ -67,19 +64,16 @@ public class BrokerWS {
     public String retrieveQueries(String firstQuery, String SecondQuery) throws FileNotFoundException{
       
         //Calling unmarshall method and object declaration
-        BrokerWS runningUnmarshal = new BrokerWS();
-        List<Broker> shares_list = runningUnmarshal.UnmarshallToday();
-        
+        BrokerWS callingClass = new BrokerWS();
+        List<Broker> shares_list = callingClass.UnmarshallToday();
         
         Broker shareFilter = new Broker();
-        //SharePrice shareDetails = new SharePrice();
         
         String GoldQuery ="";
         
         int numberOfResults=0;
         
         if (firstQuery.equals("list") && SecondQuery.equals("shares")){
-        
             try {    
                 Iterator itr = shares_list.iterator();
                 
@@ -189,10 +183,8 @@ public class BrokerWS {
                 }
         }
         
-        else if (firstQuery.equals("all") && SecondQuery.equals("currencies")){
-            
-            
-            
+        else if (firstQuery.equals("convert")){
+            //!!!! YOU CAN DELETE THIS ELSE !!!
         }
         
         else{
@@ -201,7 +193,9 @@ public class BrokerWS {
 
         return GoldQuery;
     }
-          
+    
+    
+  
 
     
     //Web Method
@@ -210,17 +204,21 @@ public class BrokerWS {
         
         //Declaring object (non-static context)
         BrokerWS searcher = new BrokerWS();
+
         
         query = query.toLowerCase();
         
-        String[] splitQuery = query.split(" ");
-        
-        //You can delete that
-        //int valueInInt;
-        
+        String[] splitQuery = query.split(" ");        
         
         //Value returned to user
         String UserResult = "";
+        
+        //Variables to return user selected currencies
+        List<Broker> shares_list = searcher.UnmarshallToday();
+        double exchangeRate = 0.0;
+        double resultOfRate = 0.0;
+        int numberOfResults = 0;
+        Broker shareFilter = new Broker();
         
         
         //Obtaining Query from user
@@ -254,12 +252,35 @@ public class BrokerWS {
             UserResult = "Exchange rate is " + String.valueOf(getConversionRate(splitQuery[1].toUpperCase(), splitQuery[2].toUpperCase()));
         }
         
+        else if (query.contains("convert") && query.contains("shares")){            
+            try {    
+                Iterator itr = shares_list.iterator();
+                
+                while(itr.hasNext()) {
+                    numberOfResults += 1;
+                    shareFilter = (Broker) itr.next();
+                    SharePrice sharePrice = shareFilter.getSharePrice();
+                    
+                    exchangeRate = getConversionRate(sharePrice.getCurrency(), splitQuery[3].toUpperCase());
+                    
+                    resultOfRate = sharePrice.getValue()/exchangeRate;
+                    
+                    UserResult += " Result("+ numberOfResults +")-> [Company name: " + shareFilter.getCompanyName() + " || Company Symbol: " + shareFilter.getCompanySymbol() + " || Available Shares: " + shareFilter.getAvailableShares() + " || main currency: "+ sharePrice.getCurrency() + " || currency converted to ("+ splitQuery[3].toUpperCase() + ") using exchange rate of [ "+ exchangeRate + " ] || last-update: " + sharePrice.getLastUpdate() + " || value: " + resultOfRate + "] ";
+                    System.out.println(UserResult);
+                        }
+                    }    
+            catch(Exception e){
+                    e.printStackTrace();
+                }
+        }
+        
         else{
                     UserResult = "Command not recognized!";
         }
 
         return UserResult;
-    }
+    } 
+    
 
     private double getConversionRate(java.lang.String arg0, java.lang.String arg1) {
         // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
@@ -274,6 +295,4 @@ public class BrokerWS {
         docwebservices.CurrencyConversionWS port = service.getCurrencyConversionWSPort();
         return port.getCurrencyCodes();
     }
-
-
 }

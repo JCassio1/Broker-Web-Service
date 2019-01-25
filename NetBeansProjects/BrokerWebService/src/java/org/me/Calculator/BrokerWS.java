@@ -7,16 +7,30 @@ package org.me.Calculator;
 
 import AllShares.*;
 import docwebservices.CurrencyConversionWSService;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.ejb.Stateless;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.WebServiceRef;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 
@@ -274,12 +288,66 @@ public class BrokerWS {
                 }
         }
         
+        
+        
+        else if(query.contains("buy") && query.contains("share")){
+            try { 
+                UserResult = updateXMLfile("weird", "375");
+            }
+            
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        
+        
+        
         else{
-                    UserResult = "Command not recognized!";
+                UserResult = "Command not recognized!";
         }
 
         return UserResult;
-    } 
+    }
+    
+
+    
+    private String updateXMLfile(String oldValue, String newValue) throws ParserConfigurationException, IOException, SAXException, TransformerConfigurationException, TransformerException{
+        
+        String isDone = "done";
+        
+        String filepath = "/Users/JCassio/NetBeansProjects/Broker_WebService/shares_today_backup.txt";
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse(filepath);
+        
+        //Get the root element
+        Node broker_collection = doc.getFirstChild();
+        
+        //Get the staff element by tag name directly
+        Node broker = doc.getElementsByTagName("broker_collection").item(0);
+        
+        //Loop the staff child node
+        NodeList list = broker.getChildNodes();
+        
+        for (int i = 0; i < list.getLength(); i++){
+            
+            Node node = list.item(i);
+            
+            //get the salary element and update the value
+            if("availableShares".equals(node.getNodeName())){
+                node.setTextContent("newValueHere");
+            }
+        }
+        
+        //write the content into xml file
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(new File(filepath));
+        transformer.transform(source, result);
+        
+        return isDone;
+    }
     
 
     private double getConversionRate(java.lang.String arg0, java.lang.String arg1) {

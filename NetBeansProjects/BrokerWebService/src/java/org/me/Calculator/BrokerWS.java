@@ -292,7 +292,7 @@ public class BrokerWS {
         
         else if(query.contains("buy") && query.contains("share")){
             try { 
-                UserResult = updateXMLfile("weird", "375");
+                UserResult = " Purchase of shares at " + splitQuery[3] + " was a " + updateXMLfile(splitQuery[3].toLowerCase());
             }
             
             catch(Exception e){
@@ -300,8 +300,7 @@ public class BrokerWS {
             }
         }
         
-        
-        
+
         else{
                 UserResult = "Command not recognized!";
         }
@@ -310,10 +309,14 @@ public class BrokerWS {
     }
     
 
-    
-    private String updateXMLfile(String oldValue, String newValue) throws ParserConfigurationException, IOException, SAXException, TransformerConfigurationException, TransformerException{
+    //Updates XML file after user makes a purchase
+    private String updateXMLfile( String companyWithShare) throws ParserConfigurationException, IOException, SAXException, TransformerConfigurationException, TransformerException{
         
-        String isDone = "done";
+        String isDone = "not successful";
+        boolean wasFound = false;
+        int newNumOfShares = 0;
+        int rotate = 0;
+        int loopCount = 0;
         
         String filepath = "/Users/JCassio/NetBeansProjects/Broker_WebService/shares_today_backup.txt";
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -323,21 +326,50 @@ public class BrokerWS {
         //Get the root element
         Node broker_collection = doc.getFirstChild();
         
+        while(loopCount < 4){
+
         //Get the staff element by tag name directly
-        Node broker = doc.getElementsByTagName("broker_collection").item(0);
+        Node broker = doc.getElementsByTagName("broker_collection").item(rotate);
         
         //Loop the staff child node
         NodeList list = broker.getChildNodes();
         
+        
         for (int i = 0; i < list.getLength(); i++){
             
             Node node = list.item(i);
+            System.out.println("Node name is " + node.getNodeName() + " NOT SUCCESSFULL");
+            System.out.println("Node value is " + node.getTextContent() + " NOT SUCCESSFULL");
             
-            //get the salary element and update the value
-            if("availableShares".equals(node.getNodeName())){
-                node.setTextContent("newValueHere");
+            
+            //Find the company name where user wishes to buy shares
+            if(node.getTextContent().equals(companyWithShare)){
+                
+                wasFound = true;
+                
+                System.out.println("I came inside company name");
+                System.out.println("Node get name = " + node.getNodeName());
+                System.out.println("Value of first child = " + node.getFirstChild());
+                System.out.println("User input was " + companyWithShare);
+                
+                isDone = "successfull";
+            }
+            
+            else if (wasFound == true && "availableShares".equals(node.getNodeName()))
+            {
+                newNumOfShares = Integer.parseInt(node.getTextContent()) - 1;
+                node.setTextContent(Integer.toString(newNumOfShares));
             }
         }
+            if (rotate < 4){
+                    rotate +=1;
+                }
+            else{
+                break;}
+                
+        loopCount++;
+    }
+
         
         //write the content into xml file
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
